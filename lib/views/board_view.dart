@@ -36,12 +36,12 @@ class _BoardViewState extends State<BoardView> {
           childAspectRatio: 1,
         ),
         itemBuilder: (context, index) {
-          var shouldRotate = isRotating && quadrant.quadrantList.contains(index);
+          var shouldRotate = isRotating && quadrant.elements.contains(index);
 
           return AnimatedRotation(
             turns: shouldRotate ? rotation.turns : 0.0,
             duration: shouldRotate ? widget.controller.duration : Duration.zero,
-            alignment: shouldRotate ? quadrant.quadrantPivot(index) : Alignment.center,
+            alignment: shouldRotate ? quadrant.pivot(index) : Alignment.center,
             child: Card(
                 color: Colors.blue,
                 child: FractionallySizedBox(

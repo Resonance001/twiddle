@@ -17,17 +17,17 @@ enum Quadrant {
 }
 
 extension QuadrantExtension on Quadrant {
-  List<int> get quadrantList => switch (this) {
+  List<int> get elements => switch (this) {
         Quadrant.I => [0, 1, 3, 4],
         Quadrant.II => [1, 2, 4, 5],
         Quadrant.III => [3, 4, 6, 7],
         Quadrant.IX => [4, 5, 7, 8]
       };
 
-  Alignment quadrantPivot(int index) => [
+  Alignment pivot(int index) => [
         Alignment.bottomRight,
         Alignment.bottomLeft,
         Alignment.topRight,
         Alignment.topLeft,
-      ].elementAt(quadrantList.indexWhere((i) => i == index));
+      ].elementAt(elements.indexWhere((i) => i == index));
 }
