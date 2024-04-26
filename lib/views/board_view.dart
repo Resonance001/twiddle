@@ -16,16 +16,16 @@ class _BoardViewState extends State<BoardView> {
 
   @override
   Widget build(BuildContext context) {
-    var turns = widget.controller.rotation.rotationAngle;
-    var duration = widget.controller.duration;
-    var alignment = Alignment.center;
+    var rotation = widget.controller.rotation;
+    var quadrant = widget.controller.quadrant;
 
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // if isRotating, then update list: old nums -> new nums
+      if (isRotating) {
+        widget.controller.rotateNums();
+      }
       isRotating = !isRotating;
     });
-    
+
     return AspectRatio(
       aspectRatio: 1,
       child: GridView.builder(
@@ -34,25 +34,24 @@ class _BoardViewState extends State<BoardView> {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 1,
-        ),  
+        ),
         itemBuilder: (context, index) {
+          var shouldRotate = isRotating && quadrant.quadrantList.contains(index);
+
           return AnimatedRotation(
-            turns: isRotating ? turns : 0.0,
-            duration: isRotating ? duration : Duration.zero,
-            alignment: alignment,
+            turns: shouldRotate ? rotation.turns : 0.0,
+            duration: shouldRotate ? widget.controller.duration : Duration.zero,
+            alignment: shouldRotate ? quadrant.quadrantPivot(index) : Alignment.center,
             child: Card(
-              color: Colors.blue,
-              child: FractionallySizedBox(
-                heightFactor: 0.5,
-                widthFactor: 0.5,
-                child: Center(
-                  child: Text(
-                    '${widget.controller.nums[index]}',
-                    style:const TextStyle(fontWeight: FontWeight.bold)
+                color: Colors.blue,
+                child: FractionallySizedBox(
+                  heightFactor: 0.5,
+                  widthFactor: 0.5,
+                  child: Center(
+                    child: Text('${widget.controller.nums[index]}',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                ),
-              )
-            ),
+                )),
           );
         },
         itemCount: 9,

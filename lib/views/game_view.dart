@@ -12,6 +12,11 @@ class GameView extends StatelessWidget {
       return ListenableBuilder(
         listenable: _controller,
         builder: (context, _) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _controller.height = context.size!.height;
+            _controller.width = context.size!.width;
+          });
+
           return GestureDetector(
             onTapDown: _controller.isEnabled ? _controller.onTapDown : null,
             onSecondaryTapDown: _controller.isEnabled ? _controller.onSecondaryTapDown : null,
