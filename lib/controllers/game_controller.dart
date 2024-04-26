@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/models/game_model.dart';
+import 'package:flutter/foundation.dart';
 
 class GameController extends ChangeNotifier {
   Rotation rotation = Rotation.values.first;
@@ -9,7 +10,13 @@ class GameController extends ChangeNotifier {
   double width = 0.0;
 
   final duration = const Duration(milliseconds: 500);
+
   var nums = <int>[2, 3, 6, 1, 5, 4, 7, 8, 9];
+  final finalNums = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  bool get isOver{
+    return listEquals(nums, finalNums);
+  }
 
   bool _isEnabled = true;
 

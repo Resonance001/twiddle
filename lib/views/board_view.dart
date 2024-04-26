@@ -12,13 +12,23 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> {
+  late final GameController _controller;
   bool isRotating = false;
 
   @override
-  Widget build(BuildContext context) {
-    var rotation = widget.controller.rotation;
-    var quadrant = widget.controller.quadrant;
+  void initState(){
+    super.initState();
+    _controller = widget.controller;
+    _controller.addListener(() async {
+      if(_controller.isOver){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Congratulations')));
+      }
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isRotating) {
         widget.controller.rotateNums();
@@ -36,19 +46,19 @@ class _BoardViewState extends State<BoardView> {
           childAspectRatio: 1,
         ),
         itemBuilder: (context, index) {
-          var shouldRotate = isRotating && quadrant.elements.contains(index);
+          var shouldRotate = isRotating && _controller.quadrant.elements.contains(index);
 
           return AnimatedRotation(
-            turns: shouldRotate ? rotation.turns : 0.0,
-            duration: shouldRotate ? widget.controller.duration : Duration.zero,
-            alignment: shouldRotate ? quadrant.pivot(index) : Alignment.center,
+            turns: shouldRotate ? _controller.rotation.turns : 0.0,
+            duration: shouldRotate ? _controller.duration : Duration.zero,
+            alignment: shouldRotate ? _controller.quadrant.pivot(index) : Alignment.center,
             child: Card(
                 color: Colors.blue,
                 child: FractionallySizedBox(
                   heightFactor: 0.5,
                   widthFactor: 0.5,
                   child: Center(
-                    child: Text('${widget.controller.nums[index]}',
+                    child: Text('${_controller.nums[index]}',
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 )),
