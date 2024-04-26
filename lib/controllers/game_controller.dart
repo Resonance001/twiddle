@@ -9,7 +9,7 @@ class GameController extends ChangeNotifier {
   double height = 0.0;
   double width = 0.0;
 
-  final duration = const Duration(milliseconds: 500);
+  final duration = const Duration(milliseconds: 300);
 
   var nums = <int>[2, 3, 6, 1, 5, 4, 7, 8, 9];
   final finalNums = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9];

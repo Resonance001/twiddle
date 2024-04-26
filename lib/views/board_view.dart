@@ -47,17 +47,21 @@ class _BoardViewState extends State<BoardView> {
         ),
         itemBuilder: (context, index) {
           var shouldRotate = isRotating && _controller.quadrant.elements.contains(index);
+          var turns = shouldRotate ? _controller.rotation.turns : 0.0;
+          var duration = shouldRotate ? _controller.duration : Duration.zero;
+          var alignment = shouldRotate ? _controller.quadrant.pivot(index) : Alignment.center;
 
           return AnimatedRotation(
-            turns: shouldRotate ? _controller.rotation.turns : 0.0,
-            duration: shouldRotate ? _controller.duration : Duration.zero,
-            alignment: shouldRotate ? _controller.quadrant.pivot(index) : Alignment.center,
+            turns: turns,
+            duration: duration,
+            alignment: alignment,
             child: Card(
                 color: Colors.blue,
-                child: FractionallySizedBox(
-                  heightFactor: 0.5,
-                  widthFactor: 0.5,
-                  child: Center(
+                child: Center(
+                  child: AnimatedRotation(
+                    turns: -turns,
+                    duration: duration,
+                    alignment: Alignment.center,
                     child: Text('${_controller.nums[index]}',
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
