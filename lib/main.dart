@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/home_page.dart';
+import 'dart:html';
 
 void main() {
+  window.document.onContextMenu.listen((evt) => evt.preventDefault());
   runApp(const MainApp());
 }
 

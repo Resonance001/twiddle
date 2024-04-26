@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:twiddle/controllers/game_controller.dart';
+import 'package:twiddle/models/game_model.dart';
 
-class BoardView extends StatelessWidget {
-  const BoardView({super.key});
+class BoardView extends StatefulWidget {
+  const BoardView({required this.controller, super.key});
 
-  static const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  final GameController controller;
+
+  @override
+  State<BoardView> createState() => _BoardViewState();
+}
+
+class _BoardViewState extends State<BoardView> {
+  bool isRotating = false;
 
   @override
   Widget build(BuildContext context) {
+    var turns = widget.controller.rotation.rotationAngle;
+    var duration = widget.controller.duration;
+    var alignment = Alignment.center;
+
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // if isRotating, then update list: old nums -> new nums
+      isRotating = !isRotating;
+    });
+    
     return AspectRatio(
       aspectRatio: 1,
       child: GridView.builder(
@@ -15,20 +34,25 @@ class BoardView extends StatelessWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 1,
-        ),
+        ),  
         itemBuilder: (context, index) {
-          return Card(
-            color: Colors.blue,
-            child: FractionallySizedBox(
-              heightFactor: 0.5,
-              widthFactor: 0.5,
-              child: Center(
-                child: Text(
-                  '${nums[index]}',
-                  style:const TextStyle(fontWeight: FontWeight.bold)
+          return AnimatedRotation(
+            turns: isRotating ? turns : 0.0,
+            duration: isRotating ? duration : Duration.zero,
+            alignment: alignment,
+            child: Card(
+              color: Colors.blue,
+              child: FractionallySizedBox(
+                heightFactor: 0.5,
+                widthFactor: 0.5,
+                child: Center(
+                  child: Text(
+                    '${widget.controller.nums[index]}',
+                    style:const TextStyle(fontWeight: FontWeight.bold)
+                  ),
                 ),
-              ),
-            )
+              )
+            ),
           );
         },
         itemCount: 9,
