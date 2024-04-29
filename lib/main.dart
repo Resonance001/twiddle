@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:twiddle/home_page.dart';
 import 'package:provider/provider.dart';
 import 'controllers/game_controller.dart';
+import 'models/game_model.dart';
 import 'dart:html';
 
 void main() {
   window.document.onContextMenu.listen((evt) => evt.preventDefault());
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => GameController(),
+    MultiProvider(
+      providers: [
+        Provider(create: (context) => PositionModel()),
+        ChangeNotifierProvider(create: (context) => GameController()),
+      ],
       child: const MainApp(),
     ),
   );

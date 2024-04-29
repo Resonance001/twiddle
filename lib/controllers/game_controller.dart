@@ -4,12 +4,6 @@ import 'package:twiddle/models/game_model.dart';
 import 'package:flutter/foundation.dart';
 
 class GameController extends ChangeNotifier {
-  Rotation rotation = Rotation.values.first;
-  Quadrant quadrant = Quadrant.values.first;
-
-  double height = 0.0;
-  double width = 0.0;
-
   final duration = const Duration(milliseconds: 300);
 
   var nums = <int>[2, 3, 6, 1, 5, 4, 7, 8, 9];
@@ -28,30 +22,31 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onTapDown(TapDownDetails details) {
-    rotation = Rotation.counterclockwise;
-    quadrant = calcQuadrant(details);
+   void onTapDown(PositionModel position, TapDownDetails details) {
+    position.rotation = Rotation.counterclockwise;
+    position.quadrant = calcQuadrant(position, details);
     toggleEnabled();
 
     Future.delayed(duration, () => toggleEnabled());
   }
 
-  void onSecondaryTapDown(TapDownDetails details) {
-    rotation = Rotation.clockwise;
-    quadrant = calcQuadrant(details);
+  void onSecondaryTapDown(PositionModel position, TapDownDetails details) {
+    position.rotation = Rotation.clockwise;
+    position.quadrant = calcQuadrant(position, details);
     toggleEnabled();
 
     Future.delayed(duration, () => toggleEnabled());
   }
 
-  Quadrant calcQuadrant(TapDownDetails details) {
-    return details.localPosition.dy < height / 2
-        ? (details.localPosition.dx < width / 2 ? Quadrant.I : Quadrant.II)
-        : (details.localPosition.dx < width / 2 ? Quadrant.III : Quadrant.IX);
+  Quadrant calcQuadrant(PositionModel position, TapDownDetails details) {
+    return details.localPosition.dy < position.height / 2
+        ? (details.localPosition.dx < position.width / 2 ? Quadrant.I : Quadrant.II)
+        : (details.localPosition.dx < position.width / 2 ? Quadrant.III : Quadrant.IX);
   }
 
-  void rotateNums()
-    => nums = switch([rotation, quadrant]){
+
+  void rotateNums(PositionModel position)
+    => nums = switch([position.rotation, position.quadrant]){
         [Rotation.clockwise, Quadrant.I] => [
           nums[3],nums[0],nums[2],
           nums[4],nums[1],nums[5],

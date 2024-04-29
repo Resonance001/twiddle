@@ -20,11 +20,12 @@ class _BoardViewState extends State<BoardView> {
 
   @override
   Widget build(BuildContext context) {
+    var position = Provider.of<PositionModel>(context, listen: false);
     var controller = Provider.of<GameController>(context, listen: true);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isRotating) {
-        controller.rotateNums();
+        controller.rotateNums(position);
       }
       isRotating = !isRotating;
     });
@@ -40,11 +41,11 @@ class _BoardViewState extends State<BoardView> {
         ),
         itemBuilder: (context, index) {
           var shouldRotate =
-              isRotating && controller.quadrant.elements.contains(index);
-          var turns = shouldRotate ? controller.rotation.turns : 0.0;
+              isRotating && position.quadrant.elements.contains(index);
+          var turns = shouldRotate ? position.rotation.turns : 0.0;
           var duration = shouldRotate ? controller.duration : Duration.zero;
           var alignment = shouldRotate
-              ? controller.quadrant.pivot(index)
+              ? position.quadrant.pivot(index)
               : Alignment.center;
 
           return AnimatedRotation(
