@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:twiddle/controllers/board_controller.dart';
 import 'package:twiddle/controllers/game_controller.dart';
 import 'package:twiddle/models/game_model.dart';
+import 'package:twiddle/constants.dart';
 import 'package:provider/provider.dart';
 
 class BoardView extends StatefulWidget {
@@ -11,8 +13,6 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> {
-  bool isRotating = false;
-
   @override
   void initState() {
     super.initState();
@@ -21,13 +21,21 @@ class _BoardViewState extends State<BoardView> {
   @override
   Widget build(BuildContext context) {
     var position = Provider.of<PositionModel>(context, listen: false);
-    var controller = Provider.of<GameController>(context, listen: true);
+    var controller = Provider.of<BoardController>(context, listen: true);
+    var gameController = Provider.of<GameController>(context, listen: true);
+    var isRotating = !gameController.isEnabled;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isRotating) {
+      if(isRotating){
         controller.rotateNums(position);
+        if (controller.isOver) {
+          Future.delayed(
+            rotateDuration,
+            () => ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('Congratulations'))),
+          );
+        }
       }
-      isRotating = !isRotating;
     });
 
     return AspectRatio(
@@ -43,11 +51,10 @@ class _BoardViewState extends State<BoardView> {
           var shouldRotate =
               isRotating && position.quadrant.elements.contains(index);
           var turns = shouldRotate ? position.rotation.turns : 0.0;
-          var duration = shouldRotate ? controller.duration : Duration.zero;
-          var alignment = shouldRotate
-              ? position.quadrant.pivot(index)
-              : Alignment.center;
-
+          var duration = shouldRotate ? rotateDuration : Duration.zero;
+          var alignment =
+              shouldRotate ? position.quadrant.pivot(index) : Alignment.center;
+        
           return AnimatedRotation(
             turns: turns,
             duration: duration,

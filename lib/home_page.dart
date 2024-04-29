@@ -6,10 +6,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(100.0),
+          padding: EdgeInsets.all(100.0),
           child: GameView(),
         )
       )

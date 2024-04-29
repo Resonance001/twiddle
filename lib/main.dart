@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:twiddle/home_page.dart';
 import 'package:provider/provider.dart';
 import 'controllers/game_controller.dart';
+import 'controllers/board_controller.dart';
 import 'models/game_model.dart';
 import 'dart:html';
 
@@ -12,6 +13,7 @@ void main() {
       providers: [
         Provider(create: (context) => PositionModel()),
         ChangeNotifierProvider(create: (context) => GameController()),
+        ChangeNotifierProvider(create: (context) => BoardController()),
       ],
       child: const MainApp(),
     ),
