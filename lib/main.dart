@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/home_page.dart';
+import 'package:provider/provider.dart';
+import 'controllers/game_controller.dart';
 import 'dart:html';
 
 void main() {
   window.document.onContextMenu.listen((evt) => evt.preventDefault());
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => GameController(),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

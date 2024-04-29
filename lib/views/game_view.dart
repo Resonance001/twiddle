@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/views/board_view.dart';
 import 'package:twiddle/controllers/game_controller.dart';
+import 'package:provider/provider.dart';
 
 class GameView extends StatelessWidget {
-    GameView({super.key});
+  const GameView({super.key});
 
-    final GameController _controller = GameController();
+  @override
+  Widget build(BuildContext context) {
+    var controller = Provider.of<GameController>(context, listen: true);
 
-    @override
-    Widget build(BuildContext context) {
-      return ListenableBuilder(
-        listenable: _controller,
-        builder: (context, _) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _controller.height = context.size!.height;
-            _controller.width = context.size!.width;
-          });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.height = context.size!.height;
+      controller.width = context.size!.width;
+    });
 
-          return GestureDetector(
-            onTapDown: _controller.isEnabled ? _controller.onTapDown : null,
-            onSecondaryTapDown: _controller.isEnabled ? _controller.onSecondaryTapDown : null,
-            child: BoardView(controller: _controller)
-          );
-        }
-      );
-    }
+    return GestureDetector(
+      onTapDown: controller.isEnabled ? controller.onTapDown : null,
+      onSecondaryTapDown:
+          controller.isEnabled ? controller.onSecondaryTapDown : null,
+      child: const BoardView(),
+    );
   }
-  
+}
