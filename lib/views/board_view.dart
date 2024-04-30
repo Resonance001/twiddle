@@ -60,7 +60,8 @@ class _BoardViewState extends State<BoardView> {
             duration: duration,
             alignment: alignment,
             child: Card(
-              color: Colors.blue,
+              elevation: 3,
+              color: Theme.of(context).cardColor,
               child: Center(
                 child: AnimatedRotation(
                   turns: -turns,
