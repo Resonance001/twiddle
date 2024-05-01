@@ -2,8 +2,22 @@ import 'package:twiddle/models/game_model.dart';
 import 'package:flutter/foundation.dart';
 
 class BoardController extends ChangeNotifier {
+  var initialNums = <int>[2, 3, 6, 1, 5, 4, 7, 8, 9];
   var nums = <int>[2, 3, 6, 1, 5, 4, 7, 8, 9];
-  final finalNums = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  var finalNums = const <int>[1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  void newNums(){
+    var temp = [...finalNums];
+    temp.shuffle();
+    initialNums = temp;
+    resetNums();
+  }
+
+  void resetNums(){
+    nums = initialNums;
+    notifyListeners();
+  }
 
   bool get isOver{
     return listEquals(nums, finalNums);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/controllers/instruction_controller.dart';
+import 'package:twiddle/controllers/board_controller.dart';
 import 'package:provider/provider.dart';
 
 class TopBar extends StatelessWidget {
@@ -10,11 +11,10 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).primaryColorLight,
-      elevation: 10,
-      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
-      child: const SizedBox.expand()
-    );
+        color: Theme.of(context).primaryColorLight,
+        elevation: 10,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
+        child: const SizedBox.expand());
   }
 }
 
@@ -31,6 +31,7 @@ class TopBarButtonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var boardController = context.read<BoardController>();
     var instructionController = context.read<InstructionController>();
     return SizedBox.expand(
       child: Row(
@@ -38,23 +39,27 @@ class TopBarButtonList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox.shrink(),
-          const TopBarButton(
+          TopBarButton(
             text: 'New Game',
-            onTap: [],
+            onTap: [
+              boardController.newNums,
+            ],
           ),
           TopBarButton(
             text: 'How To Play',
             turns: 0.5,
             onTap: [
               _onTap,
-              if(!_isOpen) instructionController.start,
-              if(_isOpen) instructionController.resetNums,
+              if (!_isOpen) instructionController.start,
+              if (_isOpen) instructionController.resetNums,
             ],
             isOpen: _isOpen,
           ),
-          const TopBarButton(
+          TopBarButton(
             text: 'Reset Board',
-            onTap: [],
+            onTap: [
+              boardController.resetNums,
+            ],
           ),
           const SizedBox.shrink(),
         ],
@@ -64,7 +69,7 @@ class TopBarButtonList extends StatelessWidget {
 }
 
 class TopBarButton extends StatelessWidget {
-   const TopBarButton({
+  const TopBarButton({
     super.key,
     required List<void Function()> onTap,
     required String text,
@@ -100,7 +105,7 @@ class TopBarButton extends StatelessWidget {
             children: [
               Text(
                 _text,
-                style:  const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
               AnimatedRotation(
                 turns: _isOpen ? _turns : 0.0,

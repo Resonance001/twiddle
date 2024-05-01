@@ -57,7 +57,6 @@ class _BoardViewState extends State<BoardView> {
   @override
   void initState() {
     super.initState();
-    // TODO: load shuffled nums when new game is pessed
   }
 
   @override
@@ -72,13 +71,13 @@ class _BoardViewState extends State<BoardView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isRotating) {
         rotateNums(position);
-        if(isOver){ // not working.. need to tap one more time to trigger
-          Future.delayed(
-            rotateDuration,
-            () => ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Congratulations'))),
-          );
-        }
+      }
+      if (isOver) {
+        Future.delayed(
+          rotateDuration,
+          () => ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Congratulations'))),
+        );
       }
     });
 
@@ -92,7 +91,8 @@ class _BoardViewState extends State<BoardView> {
           childAspectRatio: 1,
         ),
         itemBuilder: (context, index) {
-          var shouldRotate = isRotating && position.quadrant.elements.contains(index);
+          var shouldRotate =
+              isRotating && position.quadrant.elements.contains(index);
           var turns = shouldRotate ? position.rotation.turns : 0.0;
           var duration = shouldRotate ? rotateDuration : Duration.zero;
           var alignment =
