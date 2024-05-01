@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
               Positioned(
                 top: Offset.topBarHeight,
                 bottom: Offset.topBarHeight,
-                child: InstructionView(
+                child: InstructionWindow(
                   duration: controller.duration,
                   isOpen: controller.isOpen,
                 ),

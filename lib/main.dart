@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:twiddle/views/home_page.dart';
 import 'package:provider/provider.dart';
-import 'controllers/game_controller.dart';
-import 'controllers/board_controller.dart';
-import 'controllers/top_bar_controller.dart';
-import 'models/game_model.dart';
+import 'package:twiddle/controllers/game_controller.dart';
+import 'package:twiddle/controllers/board_controller.dart';
+import 'package:twiddle/controllers/top_bar_controller.dart';
+import 'package:twiddle/controllers/instruction_controller.dart';
+import 'package:twiddle/models/game_model.dart';
 import 'dart:html';
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => GameController()),
         ChangeNotifierProvider(create: (context) => BoardController()),
         ChangeNotifierProvider(create: (context) => TopBarController()),
+        ChangeNotifierProvider(create: (context) => InstructionController()),
       ],
       child: const MainApp(),
     ),
@@ -38,6 +40,7 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       themeMode: ThemeMode.light,
+      // home: const HomePage(),
       home: const HomePage()
     );
   }

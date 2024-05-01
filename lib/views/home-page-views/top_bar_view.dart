@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:twiddle/controllers/instruction_controller.dart';
+import 'package:provider/provider.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
@@ -29,6 +31,7 @@ class TopBarButtonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var instructionController = context.read<InstructionController>();
     return SizedBox.expand(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -37,15 +40,21 @@ class TopBarButtonList extends StatelessWidget {
           const SizedBox.shrink(),
           const TopBarButton(
             text: 'New Game',
+            onTap: [],
           ),
           TopBarButton(
             text: 'How To Play',
             turns: 0.5,
-            onTap: _onTap,
+            onTap: [
+              _onTap,
+              if(!_isOpen) instructionController.start,
+              if(_isOpen) instructionController.resetNums,
+            ],
             isOpen: _isOpen,
           ),
           const TopBarButton(
             text: 'Reset Board',
+            onTap: [],
           ),
           const SizedBox.shrink(),
         ],
@@ -55,20 +64,20 @@ class TopBarButtonList extends StatelessWidget {
 }
 
 class TopBarButton extends StatelessWidget {
-  const TopBarButton(
-      {super.key,
-      void Function()? onTap,
-      required String text,
-      double? turns,
-      Duration? duration,
-      bool? isOpen})
-      : _onTap = onTap,
+   const TopBarButton({
+    super.key,
+    required List<void Function()> onTap,
+    required String text,
+    double? turns,
+    Duration? duration,
+    bool? isOpen,
+  })  : _onTap = onTap,
         _text = text,
         _turns = turns ?? 1.0,
         _duration = duration ?? const Duration(milliseconds: 250),
         _isOpen = isOpen ?? true;
 
-  final void Function()? _onTap;
+  final List<void Function()> _onTap;
   final String _text;
   final double _turns;
   final Duration _duration;
@@ -80,7 +89,8 @@ class TopBarButton extends StatelessWidget {
       color: Theme.of(context).primaryColorDark,
       borderRadius: BorderRadius.circular(24),
       child: InkWell(
-        onTap: _onTap ?? () => {},
+        // ignore: avoid_function_literals_in_foreach_calls
+        onTap: () => _onTap.forEach((tap) => tap()),
         hoverColor: Theme.of(context).hoverColor,
         borderRadius: BorderRadius.circular(24),
         child: SizedBox(
